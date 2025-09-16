@@ -12,44 +12,73 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout code
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Set up Python
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v5
       with:
         python-version: '3.8'
 
     - name: Install dependencies
       run: |
-        pip install --upgrade pip
+        python -m pip install --upgrade pip
         pip install -r requirements.txt
 
     - name: Set up JDK 11
-      uses: actions/setup-java@v3
+      uses: actions/setup-java@v4
       with:
         java-version: '11'
         distribution: 'temurin'
 
-    - name: Install Android SDK
+    - name: Install Android SDK and Buildozer dependencies
       run: |
         sudo apt update
-        sudo apt install -y android-sdk
+        sudo apt install -y android-sdk build-essential libffi-dev libssl-dev libjpeg-dev libpng-dev libsqlite3-dev
         echo "ANDROID_HOME=/usr/lib/android-sdk" >> $GITHUB_ENV
 
     - name: Install Buildozer
       run: |
-        pip install buildozer
-        sudo apt install -y build-essential libffi-dev libssl-dev libjpeg-dev libpng-dev libsqlite3-dev
+        pip install buildozer cython
+
+    - name: Debug information
+      run: |
+        echo "Python version:"
+        python --version
+        echo "Pip list:"
+        pip list
+        echo "Buildozer version:"
+        buildozer --version
+        echo "Java version:"
+        java -version
+        echo "Current directory:"
+        pwd
+        echo "Directory contents:"
+        ls -la
+
+    - name: Initialize buildozer if needed
+      run: |
+        if [ ! -f "buildozer.spec" ]; then
+          echo "buildozer.spec not found, initializing..."
+          buildozer init
+        else
+          echo "buildozer.spec found"
+        fi
 
     - name: Build APK
       run: |
         buildozer android debug
+
+    - name: List bin directory
+      run: |
+        echo "Checking bin directory contents:"
+        ls -la bin/ || echo "bin directory not found or empty"
 
     - name: Upload APK
       uses: actions/upload-artifact@v4
       with:
         name: rubik-timer-apk
         path: bin/*.apk
+        if-no-files-found: ignore
 
     - name: Create Release
       if: github.event_name == 'push' && github.ref == 'refs/heads/main'
@@ -63,7 +92,7 @@ jobs:
         prerelease: false
 
     - name: Upload Release Asset
-      if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+      if: github.event_name == 'push' && github.ref == 'refs/heads/main' && always()
       uses: actions/upload-release-asset@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
