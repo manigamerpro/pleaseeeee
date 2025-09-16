@@ -19,7 +19,18 @@ if errorlevel 1 (
     exit /b 1
 )
 
+REM Check if remote already exists
+git remote get-url origin >nul 2>&1
+if errorlevel 1 (
+    echo Adding remote repository...
+    git remote add origin https://github.com/%USERNAME%/%REPO_NAME%.git
+) else (
+    echo Updating remote repository URL...
+    git remote set-url origin https://github.com/%USERNAME%/%REPO_NAME%.git
+)
+
 REM Add all files
+echo.
 echo Adding files to git...
 git add .; git status
 

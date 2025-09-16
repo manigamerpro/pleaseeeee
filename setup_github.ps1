@@ -20,9 +20,16 @@ $remoteUrl = "https://github.com/$username/$repoName.git"
 
 Write-Host "Configured repository: $repoName for user: $username" -ForegroundColor Yellow
 
-# Add remote repository
-Write-Host "Adding remote repository..." -ForegroundColor Yellow
-git remote add origin $remoteUrl
+# Check if remote already exists
+$remoteExists = git remote get-url origin 2>$null
+if ($remoteExists) {
+    Write-Host "Remote origin already exists. Updating URL..." -ForegroundColor Yellow
+    git remote set-url origin $remoteUrl
+}
+else {
+    Write-Host "Adding remote repository..." -ForegroundColor Yellow
+    git remote add origin $remoteUrl
+}
 
 # Push to GitHub
 Write-Host "Pushing code to GitHub..." -ForegroundColor Yellow
