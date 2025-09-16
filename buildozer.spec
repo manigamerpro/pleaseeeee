@@ -6,23 +6,23 @@ title = Rubik Timer
 # (str) Package name
 package.name = rubiktimer
 
-# (str) Package domain (needed for android/ios packaging)
-package.domain = com.rubik
+# (str) Package domain (needed to put the package into a Java namespace)
+package.domain = com.manigamerpro
 
 # (str) Source code where the main.py live
 source.dir = .
 
 # (list) Source files to include (let empty to include all the files)
-source.include_exts = py,png,jpg,kv,atlas,html,css,js,json
+source.include_exts = py,png,jpg,kv,atlas,json,js,html,css
 
 # (list) List of inclusions using pattern matching
-#source.include_patterns = assets/*,images/*.png
+source.include_patterns = frontend/*
 
 # (list) Source files to exclude (let empty to not exclude anything)
-#source.exclude_exts = spec
+source.exclude_exts = spec
 
 # (list) List of directory to exclude (let empty to not exclude anything)
-source.exclude_dirs = junk, tests, docs, .git, __pycache__, *.pyc, *.pyo
+source.exclude_dirs = tests, bin, .git, .github, __pycache__
 
 # (list) List of exclusions using pattern matching
 #source.exclude_patterns = license,images/*/*.jpg
@@ -36,10 +36,10 @@ version = 1.0
 
 # (list) Application requirements
 # comma separated e.g. requirements = sqlite3,kivy
-requirements = python3,kivy,flask,flask-cors,waitress,android
+requirements = python3,kivy,flask,flask-cors,waitress
 
 # (str) Custom source folders for requirements
-# Sets custom source for any requirements with source files not in 'requirements'
+# Sets custom source for any requirements with recipes
 # requirements.source.kivy = ../../kivy
 
 # (list) Garden requirements
@@ -51,7 +51,7 @@ requirements = python3,kivy,flask,flask-cors,waitress,android
 # (str) Icon of the application
 #icon.filename = %(source.dir)s/data/icon.png
 
-# (str) Supported orientation (one of landscape, sensorLandscape, portrait or all)
+# (str) Supported orientation (one of landscape, portrait or all)
 orientation = portrait
 
 # (list) List of service to declare
@@ -68,7 +68,7 @@ orientation = portrait
 osx.python_version = 3
 
 # Kivy version to use
-osx.kivy_version = 1.11.1
+osx.kivy_version = 2.0.0
 
 #
 # Android specific
@@ -77,30 +77,20 @@ osx.kivy_version = 1.11.1
 # (bool) Indicate if the application should be fullscreen or not
 fullscreen = 0
 
-# (string) Presplash background color (for new android toolchain)
-# Supported formats are: #RRGGBB #AARRGGBB or one of the following names:
-# red, blue, green, black, white, gray, cyan, magenta, yellow, lightgray,
-# darkgray, grey, lightgrey, darkgrey, aqua, fuchsia, lime, maroon, navy,
-# olive, purple, silver, teal.
-#android.presplash_color = #FFFFFF
+# (string) The Android arch to build for, choices are armeabi-v7a, arm64-v8a, x86, x86_64
+android.archs = arm64-v8a, armeabi-v7a
 
-# (list) Permissions
-#android.permissions = INTERNET
+# (int) Android API to use
+android.api = 31
 
-# (int) Target Android API, should be as high as possible.
-#android.api = 27
-
-# (int) Minimum API your APK will support.
-#android.minapi = 21
+# (int) Minimum API required
+android.minapi = 21
 
 # (int) Android SDK version to use
 #android.sdk = 20
 
 # (str) Android NDK version to use
-#android.ndk = 19b
-
-# (int) Android NDK API to use. This is the minimum API your app will support, it should usually match android.minapi.
-#android.ndk_api = 21
+#android.ndk = 23b
 
 # (bool) Use --private data storage (True) or --dir public storage (False)
 #android.private_storage = True
@@ -116,50 +106,37 @@ fullscreen = 0
 
 # (bool) If True, then skip trying to update the Android sdk
 # This can be useful to avoid excess Internet downloads or save time
-# when an update is due and you know that your setup is working
+# when an update is due and you know that your setup is up to date
 #android.skip_update = False
 
 # (bool) If True, then automatically accept SDK license agreements. This is intended for automation only. If set to False, the default, you will be shown the license when first running buildozer.
-#android.accept_sdk_license = False
+# android.accept_sdk_license = False
 
-# (str) Android entry point, default is ok for Kivy apps
-#android.entrypoint = org.kivy.android.PythonActivity
+# (str) Android entrypoint, default is ok for Kivy-based app
+#android.entrypoint = main.py
 
-# (str) Android app theme, default is ok for Kivy apps
-# android.theme = @android:style/Theme.NoTitleBar
+# (str) Android app theme, default is ok for Kivy-based app
+# android.apptheme = "@android:style/Theme.NoTitleBar"
 
 # (list) Permissions
-android.permissions = INTERNET, WRITE_EXTERNAL_STORAGE, READ_EXTERNAL_STORAGE
+#android.permissions = INTERNET
 
 # (int) Target Android API, should be as high as possible.
-android.api = 27
+#android.targetapi = 27
 
-# (int) Minimum API your APK will support
-android.minapi = 21
+# (str) Presplash background color (for new android toolchain)
+# Supported formats are: #RRGGBB #AARRGGBB or one of the following names:
+# red, blue, green, black, white, gray, cyan, magenta, yellow, lightgray,
+# darkgray, grey, lightgrey, darkgrey, aqua, fuchsia, lime, maroon, navy,
+# olive, purple, silver, teal.
+#android.presplash_color = #FFFFFF
 
-# (int) Android SDK version to use
-android.sdk = 20
+# (str) Presplash animation scale format as float
+#android.presplash_anim_scale = 0.5
 
-# (str) Android NDK version to use
-android.ndk = 19b
-
-# (str) Android NDK directory (if empty, it will be automatically downloaded.)
-#android.ndk_path =
-
-# (str) Android SDK directory (if empty, it will be automatically downloaded.)
-#android.sdk_path =
-
-# (str) ANT directory (if empty, it will be automatically downloaded.)
-#android.ant_path =
-
-# (str) Android entry point, default is ok for Kivy apps
-#android.entrypoint = org.renpy.android.PythonActivity
-
-# (str) Android app theme, default is ok for Kivy apps
-# android.theme = @android:style/Theme.NoTitleBar
-
-# (list) Gradle dependencies
-#android.gradle_dependencies = com.android.support:appcompat-v7:27.1.1
+# (str) Enforce to use a specific Java version
+# Uncomment the line below to use Java 11 instead of Java 8
+# android.java_version = 11
 
 #
 # iOS specific
@@ -171,9 +148,18 @@ android.ndk = 19b
 # Get a list of available identities: buildozer ios list_identities
 #ios.codesign.debug = "iPhone Developer: <lastname> <firstname> (<hexstring>)"
 
-[buildozer]
+#
+# Source control
+#
 
-# (int) Log level (0 = error only, 1 = info, 2 = debug (with command output))
+# (str) GitHub repository URL
+#github.repo = https://github.com/manigamerpro/rubik-timer
+
+#
+# Buildozer settings
+#
+
+# (str) Buildozer log level (info, debug, warning, error, critical)
 log_level = 2
 
 # (int) Display warning if buildozer is run as root (0 = False, 1 = True)
@@ -182,27 +168,8 @@ warn_on_root = 1
 # (str) Path to build artifact storage, absolute or relative to spec file
 # build_dir = ./.buildozer
 
-# (str) Path to build storage, absolute or relative to spec file
+# (str) Path to build output (i.e. .apk, .ipa) storage
 # bin_dir = ./bin
-
-#    -----------------------------------------------------------------------------
-#    List as sections
-#
-#    You can define all the "list" as [section:key].
-#    Each line will be considered as a option to the list.
-#    Let's take [app] / source.exclude_patterns.
-#    Instead of doing:
-#
-#     [app]
-#     source.exclude_patterns = license,data/audio/*.wav,data/images/original/*
-#
-#    This can be translated into:
-#
-#     [app:source.exclude_patterns]
-#     license
-#     data/audio/*.wav
-#     data/images/original/*
-#
 
 #    -----------------------------------------------------------------------------
 #    Profiles
@@ -212,12 +179,12 @@ warn_on_root = 1
 #    HD content. You could first change the title to add "(demo)" in the name
 #    and extend the excluded directories to remove the HD content.
 #
-#     [app@demo]
-#     title = My Application (demo)
+#[app@demo]
+#title = My Application (demo)
 #
-#     [app:source.exclude_patterns@demo]
-#     images/hd/*
+#[source.exclude_patterns@demo]
+#images/hd/*
 #
 #    Then, invoke the command line with the "demo" profile:
 #
-#     buildozer -P demo android debug
+#buildozer -v android debug --profile demo

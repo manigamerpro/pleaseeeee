@@ -7,19 +7,18 @@ try {
     if ($LASTEXITCODE -ne 0) {
         throw "Git not found"
     }
-} catch {
+}
+catch {
     Write-Host "Error: Git is not installed or not in PATH" -ForegroundColor Red
     exit 1
 }
 
-# Get repository name from user
-$repoName = Read-Host "Enter your GitHub repository name (e.g., rubik-timer-mobile)"
-
-# Get username from user
-$username = Read-Host "Enter your GitHub username"
-
-# Create remote repository URL
+# Repository configuration
+$username = "manigamerpro"
+$repoName = "pleaseeeee"
 $remoteUrl = "https://github.com/$username/$repoName.git"
+
+Write-Host "Configured repository: $repoName for user: $username" -ForegroundColor Yellow
 
 # Add remote repository
 Write-Host "Adding remote repository..." -ForegroundColor Yellow
