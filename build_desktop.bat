@@ -10,9 +10,10 @@ if errorlevel 1 (
     exit /b 1
 )
 
-REM Install PyInstaller if not already installed
-echo Installing PyInstaller...
-pip install pyinstaller
+REM Install required packages
+echo Installing required packages...
+pip install -r requirements.txt
+pip install pyinstaller pywebview
 
 REM Try to find pyinstaller in the user scripts directory
 set PYINSTALLER_PATH=%APPDATA%\Python\Python313\Scripts\pyinstaller.exe
@@ -30,9 +31,9 @@ if not exist "%PYINSTALLER_PATH%" (
     )
 )
 
-REM Create the executable
+REM Create the executable with hidden imports and proper data inclusion
 echo Building executable with PyInstaller...
-"%PYINSTALLER_PATH%" --onefile --windowed --add-data "frontend;frontend" --add-data "data;data" main_desktop.py
+"%PYINSTALLER_PATH%" --onefile --windowed --hidden-import=webview --hidden-import=webview.platforms.winforms --add-data "frontend;frontend" --add-data "data;data" main_desktop.py
 
 echo.
 echo Build completed!

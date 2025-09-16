@@ -14,9 +14,10 @@ catch {
     exit 1
 }
 
-# Install PyInstaller if not already installed
-Write-Host "Installing PyInstaller..." -ForegroundColor Yellow
-pip install pyinstaller
+# Install required packages
+Write-Host "Installing required packages..." -ForegroundColor Yellow
+pip install -r requirements.txt
+pip install pyinstaller pywebview
 
 # Get the full path to pyinstaller
 $pyinstallerPath = Join-Path $env:APPDATA "Python\Python313\Scripts\pyinstaller.exe"
@@ -33,9 +34,9 @@ if (-not (Test-Path $pyinstallerPath)) {
 
 Write-Host "Using pyinstaller at: $pyinstallerPath" -ForegroundColor Yellow
 
-# Create the executable
+# Create the executable with hidden imports and proper data inclusion
 Write-Host "Building executable with PyInstaller..." -ForegroundColor Yellow
-& $pyinstallerPath --onefile --windowed --add-data "frontend;frontend" --add-data "data;data" main_desktop.py
+& $pyinstallerPath --onefile --windowed --hidden-import=webview --hidden-import=webview.platforms.winforms --add-data "frontend;frontend" --add-data "data;data" main_desktop.py
 
 Write-Host ""
 Write-Host "Build completed!" -ForegroundColor Green
