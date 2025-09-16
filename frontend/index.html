@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Rubik Timer</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div id="stars-container"></div>
+  
+  <button id="settingsGearBtn">⚙️</button>
+  
+  <div id="timerCircle">tap-to-start</div>
+  
+  <div id="timerButtons">
+    <button id="mainCancelTimerBtn" class="cancel-timer-btn" style="display: none; margin: 10px auto;">cancel-timer</button>
+  </div>
+  
+  <div id="inspectionTimer"></div>
+  
+  <div id="buttons">
+    <button id="openSelectBtn">add-select-rubik</button>
+    <button id="viewTimesBtn">view-times</button>
+  </div>
+  
+  <div id="postActions" style="display: none;">
+    <span id="solvedTypeLabel">solved-type: <b id="solvedTypeName"></b></span><br/>
+    <button id="changeRubikBtn">change-rubik</button>
+    <button id="cancelTimerBtn" style="display: none; margin-top: 10px;">cancel</button>
+  </div>
+  
+  <div id="recordMessage"></div>
+  
+  <div id="history"></div>
+  
+  <!-- Select Modal -->
+  <div id="selectModal" class="modal-overlay">
+    <div class="modal">
+      <h3>select-rubik</h3>
+      <select id="cubeSelect"></select>
+      <div style="margin: 8px 0;">
+        <input type="text" id="newCube" placeholder="add-new-rubik" style="width: 100%;"/>
+      </div>
+      <div class="modal-buttons">
+        <button id="addBtn">add-select-rubik</button>
+        <button id="removeBtn" class="remove-btn">delete</button>
+      </div>
+      <input type="text" id="renameCube" placeholder="rename-selected"/>
+      <div class="modal-buttons">
+        <button id="renameBtn">rename-selected</button>
+        <button id="confirmBtn">select-rubik</button>
+      </div>
+      <!-- Multilingual support simplified -->
+      <!-- Removed complex multilingual cube system as requested -->
+      <div class="modal-buttons">
+        <button id="cancelSelectBtn" class="close-btn">close</button>
+      </div>
+      <div id="selectMessage" class="message"></div>
+    </div>
+  </div>
+
+  <!-- View Times Modal -->
+  <div id="timesModal" class="modal-overlay">
+    <div class="modal times-modal">
+      <h3>all-solve-times</h3>
+      <div class="filter-row">
+        <label>filter-by-rubik:</label>
+        <select id="filterSelect">
+          <option value="all">all</option>
+        </select>
+        <label>sort-by:</label>
+        <select id="sortSelect">
+          <option value="last">last</option>
+          <option value="first">first</option>
+          <option value="fastest">fastest</option>
+          <option value="slowest">slowest</option>
+        </select>
+      </div>
+
+      <div id="averages" style="margin-top:8px; font-size:0.95em; color:#cddaff;"></div>
+
+      <table class="times-table">
+        <thead>
+          <tr><th>#</th><th>rubik</th><th>time</th><th>change-type</th><th>action</th></tr>
+        </thead>
+        <tbody id="timesBody"></tbody>
+      </table>
+      <div id="noTimes" class="no-times" style="display:none;">no-times</div>
+      
+      <!-- Bottom bar with action buttons -->
+      <div class="times-modal-bottom-bar">
+        <div class="modal-buttons">
+          <button id="clearAllBtn" class="remove-btn">clear-all-times</button>
+          <button id="clearRecordsBtn" class="remove-btn">clear-records</button>
+          <button id="closeTimesBtn" class="close-btn">close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Settings Modal -->
+  <div id="settingsModal" class="modal-overlay">
+    <div class="modal settings-modal">
+      <h3>settings-title</h3>
+      
+      <div class="setting-item">
+        <label for="languageSelect">language</label>
+        <select id="languageSelect" class="language-selector">
+          <option value="en">English</option>
+          <option value="fa">Persian / فارسی</option>
+        </select>
+      </div>
+      
+      <div class="setting-item">
+        <label>inspection-timer</label>
+        <input type="checkbox" id="inspectionTimerToggle" checked>
+      </div>
+      
+      <div class="setting-item">
+        <label>save-unknown-solves</label>
+        <input type="checkbox" id="saveUnknownToggle" checked>
+      </div>
+      
+      <div class="setting-item">
+        <label for="timerDisplayDurationInput">timer-display-duration</label>
+        <input type="number" id="timerDisplayDurationInput" min="500" max="10000" value="1500">
+      </div>
+      
+      <div class="setting-item">
+        <label for="inspectionTimeInput">inspection-time</label>
+        <input type="number" id="inspectionTimeInput" min="1" max="60" value="15">
+      </div>
+      
+      <div class="setting-item">
+        <label for="inspectionDelayInput">inspection-delay</label>
+        <input type="number" id="inspectionDelayInput" min="50" max="1000" value="200">
+      </div>
+      
+      <div class="modal-buttons">
+        <button id="exportSettingsBtn">export</button>
+        <button id="importSettingsBtn">import</button>
+      </div>
+      
+      <div class="modal-buttons">
+        <button id="saveSettingsBtn">save-settings</button>
+        <button id="resetSettingsBtn">reset-settings</button>
+        <button id="closeSettingsBtn" class="close-btn">close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Import/Export Modal -->
+  <div id="importExportModal" class="modal-overlay">
+    <div class="modal">
+      <h3>import-export-title</h3>
+      
+      <div class="modal-buttons">
+        <button id="importExportSettingsBtn">settings-only</button>
+        <button id="importExportTimesBtn">times-only</button>
+        <button id="importExportBothBtn">both-settings-and-times</button>
+      </div>
+      
+      <div class="modal-buttons">
+        <button id="closeImportExportBtn" class="close-btn">close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- File Operation Modal -->
+  <div id="fileOperationModal" class="modal-overlay">
+    <div class="modal">
+      <h3>file-operation-title</h3>
+      
+      <div class="modal-buttons">
+        <button id="fileOperationSaveBtn">save-to-file</button>
+        <button id="fileOperationCopyBtn">copy-to-clipboard</button>
+      </div>
+      
+      <div class="modal-buttons">
+        <button id="fileOperationCloseBtn" class="close-btn">close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Language files -->
+  <script src="lang_en.js"></script>
+  <script src="lang_fa.js"></script>
+  <script src="lang_manager.js"></script>
+  <script src="app.js"></script>
+  
+  <script>
+    /* =========================
+       STARRY BACKGROUND
+       ========================= */
+    document.addEventListener('DOMContentLoaded', function() {
+      const starsContainer = document.getElementById('stars-container');
+      if (starsContainer) {
+        for(let i=0; i<140; i++){
+          const star = document.createElement('div');
+          star.classList.add('star');
+          star.style.width = star.style.height = (Math.random()*2 + 1) + 'px';
+          star.style.top = Math.random()*100 + 'vh';
+          star.style.left = Math.random()*100 + 'vw';
+          star.style.animationDelay = (Math.random()*5) + 's';
+          star.style.animationDuration = (Math.random()*3 + 2) + 's';
+          star.style.opacity = Math.random() * 0.8 + 0.15;
+          starsContainer.appendChild(star);
+        }
+      }
+    });
+  </script>
+</body>
+</html>
