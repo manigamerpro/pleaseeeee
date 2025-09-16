@@ -19,10 +19,18 @@ jobs:
       with:
         python-version: '3.8'
 
-    - name: Install dependencies
+    - name: Install system dependencies
+      run: |
+        sudo apt update
+        sudo apt install -y build-essential libffi-dev libssl-dev libjpeg-dev libpng-dev libsqlite3-dev
+        sudo apt install -y liblzma-dev libbz2-dev libreadline-dev libsqlite3-dev
+        sudo apt install -y zlib1g-dev libncurses5-dev
+
+    - name: Install Python dependencies
       run: |
         pip install --upgrade pip
         pip install -r requirements.txt
+        pip install cython
 
     - name: Set up JDK 11
       uses: actions/setup-java@v3
@@ -30,36 +38,37 @@ jobs:
         java-version: '11'
         distribution: 'temurin'
 
-    - name: Install Android SDK and Build Tools
+    - name: Install Android SDK
       run: |
-        sudo apt update
         sudo apt install -y android-sdk
         echo "ANDROID_HOME=/usr/lib/android-sdk" >> $GITHUB_ENV
-        # Install additional dependencies that might be needed
-        sudo apt install -y libncurses5
 
-    - name: Install Buildozer and Dependencies
+    - name: Install Buildozer
       run: |
-        pip install buildozer cython
-        sudo apt install -y build-essential libffi-dev libssl-dev libjpeg-dev libpng-dev libsqlite3-dev
-        sudo apt install -y liblzma-dev libbz2-dev libreadline-dev libsqlite3-dev
-        sudo apt install -y zlib1g-dev
-
-    - name: Initialize Buildozer (if needed)
-      run: |
+        pip install buildozer
+        # Initialize buildozer if needed
         if [ ! -f buildozer.spec ]; then
           buildozer init
         fi
 
-    - name: Build APK
+    - name: Build APK with detailed logging
       run: |
-        buildozer android debug
+        # Create bin directory if it doesn't exist
+        mkdir -p bin
+        
+        # Build with verbose output
+        buildozer -v android debug
+        
+        # List contents of bin directory to verify APK creation
+        echo "Contents of bin directory:"
+        ls -la bin/ || echo "Bin directory not found or empty"
 
     - name: Upload APK
       uses: actions/upload-artifact@v4
       with:
         name: rubik-timer-apk
         path: bin/*.apk
+        if-no-files-found: ignore
 
     - name: Create Release
       if: github.event_name == 'push' && github.ref == 'refs/heads/main'

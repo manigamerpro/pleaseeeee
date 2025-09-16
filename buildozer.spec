@@ -113,7 +113,7 @@ android.minapi = 21
 # android.accept_sdk_license = False
 
 # (str) Android entrypoint, default is ok for Kivy-based app
-#android.entrypoint = main.py
+android.entrypoint = main.py
 
 # (str) Android app theme, default is ok for Kivy-based app
 # android.apptheme = "@android:style/Theme.NoTitleBar"
